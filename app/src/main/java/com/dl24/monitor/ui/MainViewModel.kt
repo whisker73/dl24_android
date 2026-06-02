@@ -9,6 +9,7 @@ import com.dl24.monitor.ble.BleState
 import com.dl24.monitor.ble.DeviceState
 import com.dl24.monitor.ble.MeterReport
 import com.dl24.monitor.data.DataStore
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
@@ -29,6 +30,8 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     private val _exportResult = MutableSharedFlow<String>(extraBufferCapacity = 1)
     val exportResult: SharedFlow<String> = _exportResult.asSharedFlow()
 
+    private var pollJob: Job? = null
+
     init {
         viewModelScope.launch {
             bleManager.reports.collect { report ->
@@ -40,7 +43,22 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
             bleManager.state.collect { state ->
                 if (state is BleState.Connected) {
                     queryDeviceState()
+                    startOutputPolling()
+                } else {
+                    pollJob?.cancel()
                 }
+            }
+        }
+    }
+
+    private fun startOutputPolling() {
+        pollJob?.cancel()
+        pollJob = viewModelScope.launch {
+            while (true) {
+                kotlinx.coroutines.delay(5_000)
+                if (bleState.value !is BleState.Connected) break
+                val on = bleManager.queryOutputState()
+                if (on != null) _deviceState.value = _deviceState.value.copy(outputOn = on, outputKnown = true)
             }
         }
     }
@@ -59,9 +77,46 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
 
     fun outputOn() = bleManager.outputOn()
     fun outputOff() = bleManager.outputOff()
+
+    fun outputOnAndRefresh() {
+        viewModelScope.launch {
+            bleManager.outputOn()
+            kotlinx.coroutines.delay(400)
+            val on = bleManager.queryOutputState()
+            if (on != null) _deviceState.value = _deviceState.value.copy(outputOn = on, outputKnown = true)
+        }
+    }
+
+    fun outputOffAndRefresh() {
+        viewModelScope.launch {
+            bleManager.outputOff()
+            kotlinx.coroutines.delay(400)
+            val on = bleManager.queryOutputState()
+            if (on != null) _deviceState.value = _deviceState.value.copy(outputOn = on, outputKnown = true)
+        }
+    }
     fun setCurrent(amps: Double) = bleManager.setCurrent(amps)
     fun setVoltageCutoff(volts: Double) = bleManager.setVoltageCutoff(volts)
+
+    fun setLipoProfile(cutoff: Double, current: Double) {
+        viewModelScope.launch {
+            bleManager.setVoltageCutoff(cutoff)
+            kotlinx.coroutines.delay(200)
+            bleManager.setCurrent(current)
+            kotlinx.coroutines.delay(300)
+            _deviceState.value = bleManager.queryDeviceState()
+        }
+    }
+
     fun setTimer(seconds: Int) = bleManager.setTimer(seconds)
+
+    fun setTimerAndRefresh(seconds: Int) {
+        viewModelScope.launch {
+            bleManager.setTimer(seconds)
+            kotlinx.coroutines.delay(300)
+            _deviceState.value = bleManager.queryDeviceState()
+        }
+    }
     fun resetWh() = bleManager.resetWh()
     fun resetAh() = bleManager.resetAh()
     fun resetDuration() = bleManager.resetDuration()

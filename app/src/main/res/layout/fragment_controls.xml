@@ -162,18 +162,31 @@
             <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
                 android:text="Gerät schaltet Last automatisch aus. 0 = deaktiviert."
                 android:textColor="@color/text_muted" android:textSize="10sp"
-                android:layout_marginBottom="6dp" />
+                android:layout_marginBottom="8dp" />
+
+            <!-- Slider 0–60 min -->
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:orientation="horizontal" android:gravity="center_vertical"
+                android:layout_marginBottom="4dp">
+                <SeekBar android:id="@+id/seekbarTimer"
+                    android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:max="60"
+                    android:progress="0"
+                    android:enabled="false" />
+                <TextView android:id="@+id/labelTimerValue"
+                    android:layout_width="72dp" android:layout_height="wrap_content"
+                    android:text="aus" android:textColor="@color/text_secondary"
+                    android:textSize="11sp" android:gravity="end" />
+            </LinearLayout>
 
             <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
                 android:orientation="horizontal" android:gravity="center_vertical">
 
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                    android:text="Sekunden: " android:textColor="@color/text_secondary" />
-
                 <EditText android:id="@+id/editTimerSeconds"
                     android:layout_width="0dp" android:layout_height="wrap_content"
                     android:layout_weight="1" android:inputType="number"
-                    android:hint="0" android:text="0"
+                    android:hint="Minuten (0–60)" android:text="0"
                     android:enabled="false"
                     android:textColor="@color/text_primary"
                     android:layout_marginEnd="8dp" />

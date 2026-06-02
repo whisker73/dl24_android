@@ -39,6 +39,7 @@ object BleConstants {
     const val PX100_QUERY_OUTPUT_STATE = 0x10
     const val PX100_QUERY_PRESET_CURRENT = 0x17
     const val PX100_QUERY_PRESET_CUTOFF = 0x18
+    const val PX100_QUERY_PRESET_TIMER = 0x19
 
     val REPLY_OK = byteArrayOf(0x02, 0x01)
     val REPLY_UNSUPPORTED = byteArrayOf(0x02, 0x03)

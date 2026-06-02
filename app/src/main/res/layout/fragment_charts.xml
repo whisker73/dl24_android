@@ -11,28 +11,72 @@
         android:orientation="vertical"
         android:padding="8dp">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="SPANNUNG [V]"
+            android:textColor="@color/accent_blue"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.05"
+            android:paddingStart="4dp"
+            android:paddingBottom="2dp" />
+
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/chartVoltage"
             android:layout_width="match_parent"
-            android:layout_height="180dp"
-            android:layout_marginBottom="6dp" />
+            android:layout_height="160dp"
+            android:layout_marginBottom="10dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="STROM [A]"
+            android:textColor="@color/accent_green"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.05"
+            android:paddingStart="4dp"
+            android:paddingBottom="2dp" />
 
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/chartCurrent"
             android:layout_width="match_parent"
-            android:layout_height="180dp"
-            android:layout_marginBottom="6dp" />
+            android:layout_height="160dp"
+            android:layout_marginBottom="10dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="LEISTUNG [W]"
+            android:textColor="@color/accent_yellow"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.05"
+            android:paddingStart="4dp"
+            android:paddingBottom="2dp" />
 
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/chartPower"
             android:layout_width="match_parent"
-            android:layout_height="180dp"
-            android:layout_marginBottom="6dp" />
+            android:layout_height="160dp"
+            android:layout_marginBottom="10dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TEMPERATUR [°C]"
+            android:textColor="@color/accent_red"
+            android:textSize="10sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.05"
+            android:paddingStart="4dp"
+            android:paddingBottom="2dp" />
 
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/chartTemperature"
             android:layout_width="match_parent"
-            android:layout_height="180dp" />
+            android:layout_height="160dp" />
 
     </LinearLayout>
 </ScrollView>

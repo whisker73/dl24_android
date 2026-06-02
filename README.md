@@ -16,7 +16,7 @@ Native Android-App (Kotlin) zur Echtzeitüberwachung und Steuerung des **Atorch 
 | **Steuerung** | Last EIN/AUS, Strom-Slider (0–20 A), Cutoff-Spannung-Slider (0–200 V) |
 | **LiPo-Profile** | 1S–6S Schnellprofile (setzt Cutoff + Strom automatisch) |
 | **Reset** | W·h / A·h / Dauer / Alles zurücksetzen |
-| **Auto-Aus Timer** | Automatisches Ausschalten der Last nach einstellbarer Zeit (0–65535 s) |
+| **Auto-Aus Timer** | Automatisches Ausschalten nach 0–60 Minuten (Gerät hat nur Minuten-Granularität) |
 | **CSV Export** | Aufgezeichnete Messdaten als CSV in Downloads speichern |
 
 ---
@@ -131,18 +131,21 @@ B1 B2  CMD  INT  FRAC  B6
 | `0x01` | Output EIN/AUS | 1/0 = Ein, 0/0 = Aus |
 | `0x02` | Strom setzen | Ganzzahl / (Nachkomma × 100) |
 | `0x03` | Cutoff-Spannung | Ganzzahl / (Nachkomma × 100) |
-| `0x04` | Timer setzen | Hi-Byte / Lo-Byte (Sekunden) |
+| `0x04` | Timer setzen | Hi-Byte / Lo-Byte (Sekunden als uint16-BE) — Gerät speichert nur ganze Minuten |
 
 ### PX100 Query-Protokoll
 
 Abfrage: `B1 B2 CMD 00 00 B6`  
 Antwort: `CA CB d1 d2 d3 CE CF`
 
-| CMD | Abfrage |
-|---|---|
-| `0x10` | Output-Status (0x00 = Aus, 0x01 = Ein) |
-| `0x17` | Gesetzter Strom (×10 mA → A) |
-| `0x18` | Cutoff-Spannung (×10 mV → V) |
+| CMD | Abfrage | d1 d2 d3 |
+|---|---|---|
+| `0x10` | Output-Status | d3: `0x00` = Aus, `0x01` = Ein |
+| `0x17` | Gesetzter Strom | U24 × 10 mA → A |
+| `0x18` | Cutoff-Spannung | U24 × 10 mV → V |
+| `0x19` | Timer-Preset | hh mm ss (je 1 Byte) |
+
+> Output-Status wird alle 5 Sekunden automatisch abgefragt (Polling-Job im ViewModel, starts on connect). Dadurch wechselt der Dashboard-Dot auch nach einem Auto-Aus-Timer korrekt auf rot.
 
 ---
 
@@ -279,7 +282,7 @@ Zeigt alle Messwerte in Echtzeit. Der farbige Punkt oben links zeigt den Output-
 
 ### Charts (Tab 2)
 
-Vier scrollbare Liniendiagramme für Spannung, Strom, Leistung und Temperatur. Zoom per Pinch-Geste.
+Vier scrollbare Liniendiagramme — je mit farbigem Label (SPANNUNG [V], STROM [A], LEISTUNG [W], TEMPERATUR [°C]). Zoom per Pinch-Geste.
 
 ### Steuerung (Tab 3)
 
@@ -288,9 +291,9 @@ Vier scrollbare Liniendiagramme für Spannung, Strom, Leistung und Temperatur. Z
 | ON / OFF | Last ein-/ausschalten (B1 B2 Direktprotokoll) |
 | Strom-Slider | 0.00–20.00 A in 10-mA-Schritten |
 | V-Cut-Slider | 0.0–200.0 V in 0.1-V-Schritten — Unterspannungsabschaltung |
-| LiPo-Profile | 1S–6S: setzt Cutoff und Strom automatisch |
+| LiPo-Profile | 1S–6S: setzt Cutoff und Strom automatisch (sequenzielle BLE-Writes mit 200 ms Abstand) |
 | Reset W·h / A·h / Dauer / Alles | Zähler zurücksetzen |
-| Auto-Aus Timer | Automatisches Abschalten nach N Sekunden (0 = deaktiviert) |
+| Auto-Aus Timer | Slider 0–60 min; Gerät schaltet nach Ablauf automatisch aus (0 = deaktiviert) |
 | CSV Exportieren | Messdaten als `dl24_YYYYMMDD_HHMMSS.csv` in Downloads speichern |
 
 ---

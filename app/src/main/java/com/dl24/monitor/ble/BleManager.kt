@@ -138,6 +138,11 @@ class BleManager(private val context: Context) {
                 handleData(value)
             }
 
+            override fun onCharacteristicWrite(g: BluetoothGatt, c: BluetoothGattCharacteristic, status: Int) {
+                if (status != BluetoothGatt.GATT_SUCCESS) Log.w(TAG, "onCharacteristicWrite failed status=$status")
+                else Log.d(TAG, "Write OK: ${c.uuid}")
+            }
+
             override fun onDescriptorWrite(g: BluetoothGatt, d: BluetoothGattDescriptor, status: Int) {
                 if (status == BluetoothGatt.GATT_SUCCESS) {
                     Log.d(TAG, "Notifications aktiv")
@@ -213,10 +218,13 @@ class BleManager(private val context: Context) {
         val g = gatt ?: return
         val c = writeChar ?: return
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            g.writeCharacteristic(c, bytes, BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT)
+            val status = g.writeCharacteristic(c, bytes, BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT)
+            if (status != BluetoothGatt.GATT_SUCCESS) Log.w(TAG, "writeCharacteristic status=$status")
         } else {
             @Suppress("DEPRECATION")
             c.value = bytes
+            @Suppress("DEPRECATION")
+            c.writeType = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
             @Suppress("DEPRECATION")
             g.writeCharacteristic(c)
         }
@@ -234,21 +242,32 @@ class BleManager(private val context: Context) {
 
     // ──────────────── PX100 State Query ────────────────
 
+    suspend fun queryOutputState(): Boolean? {
+        if (gatt == null) return null
+        val raw = px100Query(BleConstants.PX100_QUERY_OUTPUT_STATE) ?: return null
+        return raw[2] == 0x01.toByte()
+    }
+
     suspend fun queryDeviceState(): DeviceState {
         if (gatt == null) return DeviceState()
-        val state = DeviceState()
 
         val rawOutput = px100Query(BleConstants.PX100_QUERY_OUTPUT_STATE)
         val rawCurrent = px100Query(BleConstants.PX100_QUERY_PRESET_CURRENT)
         val rawCutoff = px100Query(BleConstants.PX100_QUERY_PRESET_CUTOFF)
+        val rawTimer = px100Query(BleConstants.PX100_QUERY_PRESET_TIMER)
 
-        return state.copy(
+        return DeviceState(
             outputOn = rawOutput?.let { it[2] == 0x01.toByte() } ?: false,
             outputKnown = rawOutput != null,
             presetCurrentA = rawCurrent?.let { (readU24(it, 0) * 10) / 1000.0 } ?: 0.0,
             presetCurrentKnown = rawCurrent != null,
             presetCutoffV = rawCutoff?.let { (readU24(it, 0) * 10) / 1000.0 } ?: 0.0,
             presetCutoffKnown = rawCutoff != null,
+            // Timer returns hh:mm:ss in d1,d2,d3
+            presetTimerSecs = rawTimer?.let {
+                (it[0].toInt() and 0xFF) * 3600 + (it[1].toInt() and 0xFF) * 60 + (it[2].toInt() and 0xFF)
+            } ?: 0,
+            presetTimerKnown = rawTimer != null,
         )
     }
 

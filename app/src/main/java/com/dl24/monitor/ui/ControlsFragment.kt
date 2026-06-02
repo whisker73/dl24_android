@@ -43,6 +43,7 @@ class ControlsFragment : Fragment() {
 
         setupCurrentSlider()
         setupCutoffSlider()
+        setupTimerSlider()
         setupLipoSpinner()
         setupButtons()
         observeConnection()
@@ -96,16 +97,29 @@ class ControlsFragment : Fragment() {
                 binding.seekbarCurrent.progress = (current * 100).roundToInt()
                 binding.labelCutoffValue.text = "%.1f V".format(cutoff)
                 binding.labelCurrentValue.text = "%.2f A".format(current)
-                viewModel.setVoltageCutoff(cutoff)
-                viewModel.setCurrent(current)
+                viewModel.setLipoProfile(cutoff, current)
             }
             override fun onNothingSelected(parent: android.widget.AdapterView<*>) {}
         }
     }
 
+    private fun setupTimerSlider() {
+        binding.seekbarTimer.max = 60
+        binding.seekbarTimer.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(sb: SeekBar, progress: Int, fromUser: Boolean) {
+                binding.labelTimerValue.text = formatTimerMins(progress)
+                if (fromUser) binding.editTimerSeconds.setText(progress.toString())
+            }
+            override fun onStartTrackingTouch(sb: SeekBar) {}
+            override fun onStopTrackingTouch(sb: SeekBar) {}
+        })
+    }
+
+    private fun formatTimerMins(m: Int): String = if (m == 0) "aus" else "$m min"
+
     private fun setupButtons() {
-        binding.btnOutputOn.setOnClickListener { viewModel.outputOn() }
-        binding.btnOutputOff.setOnClickListener { viewModel.outputOff() }
+        binding.btnOutputOn.setOnClickListener { viewModel.outputOnAndRefresh() }
+        binding.btnOutputOff.setOnClickListener { viewModel.outputOffAndRefresh() }
 
         binding.btnResetWh.setOnClickListener { viewModel.resetWh() }
         binding.btnResetAh.setOnClickListener { viewModel.resetAh() }
@@ -120,8 +134,8 @@ class ControlsFragment : Fragment() {
         }
 
         binding.btnTimerApply.setOnClickListener {
-            val seconds = binding.editTimerSeconds.text.toString().toIntOrNull() ?: 0
-            viewModel.setTimer(seconds.coerceIn(0, 65535))
+            val minutes = binding.editTimerSeconds.text.toString().toIntOrNull() ?: 0
+            viewModel.setTimerAndRefresh(minutes.coerceIn(0, 60) * 60)
         }
 
         binding.btnExportCsv.setOnClickListener { viewModel.exportCsv() }
@@ -149,13 +163,25 @@ class ControlsFragment : Fragment() {
             viewModel.deviceState.collect { state ->
                 if (state.presetCurrentKnown) {
                     binding.seekbarCurrent.progress = (state.presetCurrentA * 100).roundToInt()
+                    binding.labelCurrentValue.text = "%.2f A".format(state.presetCurrentA)
                 }
                 if (state.presetCutoffKnown) {
                     binding.seekbarCutoff.progress = (state.presetCutoffV * 10).roundToInt()
+                    binding.labelCutoffValue.text = "%.1f V".format(state.presetCutoffV)
+                }
+                if (state.presetTimerKnown) {
+                    val mins = (state.presetTimerSecs + 30) / 60  // round to nearest minute
+                    binding.editTimerSeconds.setText(mins.toString())
+                    binding.seekbarTimer.progress = mins.coerceIn(0, 60)
+                    binding.labelTimerValue.text = formatTimerMins(mins)
                 }
                 val parts = mutableListOf<String>()
                 if (state.presetCurrentKnown) parts += "I=%.2f A".format(state.presetCurrentA)
                 if (state.presetCutoffKnown) parts += "Cutoff=%.1f V".format(state.presetCutoffV)
+                if (state.presetTimerKnown) {
+                    val mins = (state.presetTimerSecs + 30) / 60
+                    parts += if (mins == 0) "Timer=aus" else "Timer=${mins}min"
+                }
                 binding.labelDevicePreset.text = if (parts.isEmpty()) "Gerät: keine Antwort"
                     else "Gerät: ${parts.joinToString("  |  ")}"
             }
@@ -168,7 +194,7 @@ class ControlsFragment : Fragment() {
             binding.seekbarCurrent, binding.seekbarCutoff,
             binding.spinnerLipoProfile, binding.btnResetWh,
             binding.btnResetAh, binding.btnResetDuration, binding.btnResetAll,
-            binding.btnTimerApply, binding.editTimerSeconds,
+            binding.seekbarTimer, binding.editTimerSeconds, binding.btnTimerApply,
         ).forEach { it.isEnabled = enabled }
     }
 

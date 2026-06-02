@@ -35,6 +35,8 @@ data class DeviceState(
     val presetCurrentKnown: Boolean = false,
     val presetCutoffV: Double = 0.0,
     val presetCutoffKnown: Boolean = false,
+    val presetTimerSecs: Int = 0,
+    val presetTimerKnown: Boolean = false,
 )
 
 sealed class ParsedMessage {
