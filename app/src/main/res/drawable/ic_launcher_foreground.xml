@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Stylized lightning bolt / power symbol for DL24 load tester -->
+    <path
+        android:fillColor="#60a5fa"
+        android:pathData="M62,20 L42,56 L54,56 L46,88 L74,48 L60,48 Z" />
+</vector>

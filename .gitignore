@@ -1,0 +1,19 @@
+# Build output
+*.iml
+.gradle/
+local.properties
+.idea/
+.DS_Store
+build/
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Signed APKs / keystores — never commit
+*.apk
+*.aab
+*.jks
+*.keystore
+
+# Claude Code settings (local only)
+.claude/

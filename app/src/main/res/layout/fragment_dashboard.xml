@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_primary">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="12dp">
+
+        <!-- Device type / status row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@drawable/card_bg"
+            android:padding="12dp"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:id="@+id/outputStatusDot"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="●"
+                android:textSize="20sp"
+                android:textColor="@color/text_muted"
+                android:layout_marginEnd="8dp" />
+
+            <TextView
+                android:id="@+id/outputStatusLabel"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Unbekannt"
+                android:textColor="@color/text_muted"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/valueDeviceType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="—"
+                android:textColor="@color/text_muted"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <!-- 2-column measurement grid -->
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="2"
+            android:rowCount="3"
+            android:useDefaultMargins="false">
+
+            <!-- Voltage -->
+            <include layout="@layout/card_value"
+                android:id="@+id/cardVoltage"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:layout_margin="4dp" />
+
+            <!-- Current -->
+            <include layout="@layout/card_value"
+                android:id="@+id/cardCurrent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:layout_margin="4dp" />
+
+        </GridLayout>
+
+        <!-- Simplified flat list approach instead (more reliable) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Row 1: Voltage + Current -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:background="@drawable/card_bg"
+                    android:padding="12dp"
+                    android:layout_margin="4dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="SPANNUNG" android:textSize="10sp" android:textColor="@color/text_muted"
+                        android:textStyle="bold" android:letterSpacing="0.05" />
+                    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:orientation="horizontal" android:gravity="center_vertical">
+                        <TextView android:id="@+id/valueVoltage" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="---" android:textSize="28sp" android:textStyle="bold"
+                            android:textColor="@color/accent_blue" android:fontFamily="monospace" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text=" V" android:textSize="14sp" android:textColor="@color/text_muted" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:background="@drawable/card_bg"
+                    android:padding="12dp"
+                    android:layout_margin="4dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="STROM" android:textSize="10sp" android:textColor="@color/text_muted"
+                        android:textStyle="bold" />
+                    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:orientation="horizontal" android:gravity="center_vertical">
+                        <TextView android:id="@+id/valueCurrent" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="---" android:textSize="28sp" android:textStyle="bold"
+                            android:textColor="@color/accent_green" android:fontFamily="monospace" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text=" A" android:textSize="14sp" android:textColor="@color/text_muted" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Row 2: Power + Energy -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:background="@drawable/card_bg"
+                    android:padding="12dp"
+                    android:layout_margin="4dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="LEISTUNG" android:textSize="10sp" android:textColor="@color/text_muted"
+                        android:textStyle="bold" />
+                    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:orientation="horizontal" android:gravity="center_vertical">
+                        <TextView android:id="@+id/valuePower" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="---" android:textSize="28sp" android:textStyle="bold"
+                            android:textColor="@color/accent_yellow" android:fontFamily="monospace" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text=" W" android:textSize="14sp" android:textColor="@color/text_muted" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:background="@drawable/card_bg"
+                    android:padding="12dp"
+                    android:layout_margin="4dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="ENERGIE" android:textSize="10sp" android:textColor="@color/text_muted"
+                        android:textStyle="bold" />
+                    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:orientation="horizontal" android:gravity="center_vertical">
+                        <TextView android:id="@+id/valueEnergy" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="---" android:textSize="28sp" android:textStyle="bold"
+                            android:textColor="@color/accent_cyan" android:fontFamily="monospace" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text=" Wh" android:textSize="14sp" android:textColor="@color/text_muted" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Row 3: Capacity + Temperature -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:background="@drawable/card_bg"
+                    android:padding="12dp"
+                    android:layout_margin="4dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="KAPAZITÄT" android:textSize="10sp" android:textColor="@color/text_muted"
+                        android:textStyle="bold" />
+                    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:orientation="horizontal" android:gravity="center_vertical">
+                        <TextView android:id="@+id/valueCapacity" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="---" android:textSize="28sp" android:textStyle="bold"
+                            android:textColor="@color/accent_cyan" android:fontFamily="monospace" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text=" mAh" android:textSize="14sp" android:textColor="@color/text_muted" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:background="@drawable/card_bg"
+                    android:padding="12dp"
+                    android:layout_margin="4dp">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="TEMPERATUR" android:textSize="10sp" android:textColor="@color/text_muted"
+                        android:textStyle="bold" />
+                    <LinearLayout android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:orientation="horizontal" android:gravity="center_vertical">
+                        <TextView android:id="@+id/valueTemperature" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text="---" android:textSize="28sp" android:textStyle="bold"
+                            android:textColor="@color/accent_red" android:fontFamily="monospace" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                            android:text=" °C" android:textSize="14sp" android:textColor="@color/text_muted" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Duration -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/card_bg"
+                android:padding="12dp"
+                android:layout_margin="4dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="LAUFZEIT" android:textSize="10sp" android:textColor="@color/text_muted"
+                    android:textStyle="bold" />
+                <TextView android:id="@+id/valueDuration" android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="00:00:00" android:textSize="32sp" android:textStyle="bold"
+                    android:textColor="@color/text_primary" android:fontFamily="monospace" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

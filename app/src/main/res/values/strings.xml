@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">DL24 Monitor</string>
+
+    <!-- Tabs -->
+    <string name="tab_dashboard">Messwerte</string>
+    <string name="tab_charts">Charts</string>
+    <string name="tab_controls">Steuerung</string>
+
+    <!-- Connection status -->
+    <string name="status_disconnected">Nicht verbunden</string>
+    <string name="status_scanning">Suche läuft…</string>
+    <string name="status_connecting">Verbinde mit %1$s…</string>
+    <string name="status_connected">Verbunden: %1$s</string>
+
+    <!-- Menu -->
+    <string name="menu_scan">Scan</string>
+    <string name="menu_disconnect">Trennen</string>
+    <string name="menu_refresh">Status abfragen</string>
+
+    <!-- Dialogs -->
+    <string name="confirm_reset_title">Reset bestätigen</string>
+    <string name="confirm_reset_message">Alle Zähler wirklich zurücksetzen?</string>
+    <string name="confirm_clear_title">Daten löschen</string>
+    <string name="confirm_clear_message">Alle aufgezeichneten Daten wirklich löschen?</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nein</string>
+</resources>

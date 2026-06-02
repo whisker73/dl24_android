@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Background -->
+    <color name="bg_primary">#11111b</color>
+    <color name="bg_secondary">#1e1e2e</color>
+    <color name="bg_card">#24243e</color>
+    <color name="border">#313244</color>
+
+    <!-- Text -->
+    <color name="text_primary">#cdd6f4</color>
+    <color name="text_secondary">#a6adc8</color>
+    <color name="text_muted">#6c7086</color>
+
+    <!-- Accent colors matching the Linux app -->
+    <color name="accent_blue">#60a5fa</color>
+    <color name="accent_green">#34d399</color>
+    <color name="accent_yellow">#f59e0b</color>
+    <color name="accent_cyan">#22d3ee</color>
+    <color name="accent_red">#f87171</color>
+
+    <!-- Launcher icon -->
+    <color name="ic_launcher_background">#1e1e2e</color>
+
+    <!-- State colors -->
+    <color name="green_on">#22c55e</color>
+    <color name="red_off">#ef4444</color>
+</resources>
