@@ -14,6 +14,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.WindowCompat
 import androidx.lifecycle.lifecycleScope
 import com.dl24.monitor.R
 import com.dl24.monitor.ble.BleState
@@ -39,6 +40,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Disable edge-to-edge: system handles status/nav bar insets via fitsSystemWindows
+        WindowCompat.setDecorFitsSystemWindows(window, true)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
