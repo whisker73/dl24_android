@@ -230,6 +230,26 @@ adb install app/build/outputs/apk/debug/app-debug.apk
 
 > **Hinweis:** BLE funktioniert **nur** auf echten Android-Geräten, nicht im Emulator.
 
+### APK auf Google Drive hochladen
+
+[rclone](https://rclone.org/) ist als `gdrive:` Remote konfiguriert (`~/.config/rclone/rclone.conf`, Scope: `drive.file`).
+
+```fish
+# Debug APK bauen und direkt auf Drive hochladen
+./gradlew assembleDebug
+rclone copy app/build/outputs/apk/debug/app-debug.apk "gdrive:DL24 Android/"
+
+# Aktuellen Inhalt des Drive-Ordners prüfen
+rclone ls "gdrive:DL24 Android/"
+```
+
+APK landet in **Google Drive → DL24 Android → app-debug.apk**.
+
+Falls der Token abläuft:
+```fish
+rclone config reconnect gdrive:   # öffnet Browser → "Zulassen" klicken
+```
+
 ---
 
 ## Berechtigungen
