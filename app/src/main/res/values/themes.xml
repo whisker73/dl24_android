@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.DL24Monitor" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.DL24Monitor" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/accent_blue</item>
         <item name="colorPrimaryVariant">@color/bg_secondary</item>
         <item name="colorOnPrimary">@color/text_primary</item>
